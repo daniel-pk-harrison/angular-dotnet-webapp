@@ -9,7 +9,7 @@ namespace API.Extensions
             var today = DateTime.Today;
             var age = today.Year - dob.Year;
             if (dob.Date > today.AddYears(-age)) age --; //birthday has not occurred this year so subtract a year
-            return age
+            return age;
         }
     }
 }
