@@ -31,10 +31,13 @@ namespace API.Data
 
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            var query = _context.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking(); //only reading so no tracking necessary
-            return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+            var query = _context.Users.AsQueryable();
+
+            query = query.Where(user => user.UserName != userParams.CurrentUsername); //exclude current user in query
+            query = query.Where(user => user.Gender == userParams.Gender);
+
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking(), //only reading so no tracking needed
+                userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
