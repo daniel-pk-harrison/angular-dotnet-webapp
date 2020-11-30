@@ -41,8 +41,13 @@ export class MembersService {
   }
 
   getMember(username: string) {
-    const member = this.members.find(member => member.username === username);
-    if (member !== undefined) return of(member);
+    const member = [...this.memberCache.values()]  //spread values
+      .reduce((arr, elem) => arr.concat(elem.result), [])  //reduce into one array
+      .find((member: Member) => member.username === username);  //find the element that matches the username
+
+    if (member) {
+      return of(member);  //if the member exists in cache then return, else get from API
+    }
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
