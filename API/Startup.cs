@@ -61,7 +61,10 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200")); //string is origin of frontend
+            app.UseCors(policy => policy.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins("https://localhost:4200")); //string is origin of frontend
 
             app.UseAuthentication();
             app.UseAuthorization();
