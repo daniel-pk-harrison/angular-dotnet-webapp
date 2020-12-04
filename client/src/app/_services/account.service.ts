@@ -37,6 +37,9 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles); //check if the roles is an array if so assign, if not push our single role to the array
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -44,5 +47,9 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  getDecodedToken(token) {
+    return JSON.parse(atob(token.split('.')[1])); //JWT payload is at index 1
   }
 }
