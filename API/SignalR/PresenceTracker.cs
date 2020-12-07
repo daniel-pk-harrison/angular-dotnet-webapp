@@ -19,7 +19,7 @@ namespace API.SignalR
                 }
                 else
                 {
-                    OnlineUsers.Add(username, new List<string>{connectionId});
+                    OnlineUsers.Add(username, new List<string> { connectionId });
                 }
             }
 
@@ -52,6 +52,17 @@ namespace API.SignalR
             }
 
             return Task.FromResult(onlineUsers);
+        }
+
+        public Task<List<string>> GetConnectionForUser(string username)
+        {
+            List<string> connectionIds;
+            lock (OnlineUsers)
+            {
+                connectionIds = OnlineUsers.GetValueOrDefault(username);
+            }
+
+            return Task.FromResult(connectionIds);
         }
     }
 }
